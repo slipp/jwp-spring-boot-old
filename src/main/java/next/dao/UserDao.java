@@ -7,6 +7,7 @@ import java.util.List;
 import next.model.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -26,7 +27,11 @@ public class UserDao {
 
     public User findByUserId(String userId) {
         String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
-        return jdbcTemplate.queryForObject(sql, new UserRowMapper(), userId);
+        try {
+        	return jdbcTemplate.queryForObject(sql, new UserRowMapper(), userId); 
+        } catch (EmptyResultDataAccessException e) {
+        	return null;
+        }
     }
 
     public List<User> findAll() throws SQLException {
