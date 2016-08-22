@@ -2,7 +2,15 @@ package next.model;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Question {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
 	private long questionId;
 
 	private String writer;
@@ -84,6 +92,10 @@ public class Question {
 		this.title = newQuestion.title;
 		this.contents = newQuestion.contents;
 	}
+	
+    public void updateCountOfAnswer() {
+        this.countOfComment += 1;
+    }
 
 	@Override
 	public String toString() {

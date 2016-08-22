@@ -5,35 +5,33 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import next.CannotOperateException;
-import next.dao.AnswerDao;
-import next.dao.QuestionDao;
 import next.model.Answer;
 import next.model.Question;
 import next.model.User;
+import next.repository.AnswerRepository;
+import next.repository.QuestionRepository;
 
 @Service
+@Transactional
 public class QnaService {
-	private QuestionDao questionDao;
-	private AnswerDao answerDao;
-
-	@Autowired
-	public QnaService(QuestionDao questionDao, AnswerDao answerDao) {
-		this.questionDao = questionDao;
-		this.answerDao = answerDao;
-	}
+    @Autowired
+    private QuestionRepository questionRepository;
+    @Autowired
+    private AnswerRepository answerRepository;
 
 	public Question findById(long questionId) {
-		return questionDao.findById(questionId);
+		return questionRepository.findOne(questionId);
 	}
 
 	public List<Answer> findAllByQuestionId(long questionId) {
-		return answerDao.findAllByQuestionId(questionId);
+		return answerRepository.findByQuestionId(questionId);
 	}
 
 	public void deleteQuestion(long questionId, User user) throws CannotOperateException {
-		Question question = questionDao.findById(questionId);
+		Question question = questionRepository.findOne(questionId);
 		if (question == null) {
 			throw new EmptyResultDataAccessException("존재하지 않는 질문입니다.", 1);
 		}
@@ -42,9 +40,9 @@ public class QnaService {
 			throw new CannotOperateException("다른 사용자가 쓴 글을 삭제할 수 없습니다.");
 		}
 
-		List<Answer> answers = answerDao.findAllByQuestionId(questionId);
+		List<Answer> answers = answerRepository.findByQuestionId(questionId);
 		if (answers.isEmpty()) {
-			questionDao.delete(questionId);
+		    questionRepository.delete(question);
 			return;
 		}
 
@@ -61,11 +59,11 @@ public class QnaService {
 			throw new CannotOperateException("다른 사용자가 추가한 댓글이 존재해 삭제할 수 없습니다.");
 		}
 
-		questionDao.delete(questionId);
+		questionRepository.delete(question);
 	}
 
 	public void updateQuestion(long questionId, Question newQuestion, User user) throws CannotOperateException {
-		Question question = questionDao.findById(questionId);
+		Question question = questionRepository.findOne(questionId);
         if (question == null) {
         	throw new EmptyResultDataAccessException("존재하지 않는 질문입니다.", 1);
         }
@@ -75,6 +73,5 @@ public class QnaService {
         }
         
         question.update(newQuestion);
-        questionDao.update(question);
 	}
 }

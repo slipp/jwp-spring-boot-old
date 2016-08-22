@@ -2,7 +2,15 @@ package next.model;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Answer {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
 	private long answerId;
 	
 	private String writer;
@@ -12,6 +20,9 @@ public class Answer {
 	private Date createdDate;
 
 	private long questionId;
+	
+	public Answer() {
+    }
 	
 	public Answer(String writer, String contents, long questionId) {
 		this(0, writer, contents, new Date(), questionId);
