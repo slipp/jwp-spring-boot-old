@@ -14,6 +14,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
+import com.google.common.collect.Lists;
+
+import next.CannotOperateException;
+
 @Entity
 public class Question {
     @Id
@@ -40,17 +44,15 @@ public class Question {
 	}
 
 	public Question(User writer, String title, String contents) {
-		this(0, writer, title, contents, new Date(), 0);
+		this(writer, title, contents, Lists.newArrayList());
 	}
-
-	public Question(long questionId, User writer, String title, String contents, Date createdDate,
-			int countOfComment) {
-		this.questionId = questionId;
+	
+	public Question(User writer, String title, String contents, List<Answer> answers) {
 		this.writer = writer;
 		this.title = title;
 		this.contents = contents;
-		this.createdDate = createdDate;
-		this.countOfComment = countOfComment;
+		this.createdDate = new Date();
+		this.answers = answers;
 	}
 
 	public long getQuestionId() {
@@ -113,6 +115,18 @@ public class Question {
     public void updateCountOfAnswer() {
         this.countOfComment += 1;
     }
+    
+    public boolean canDelete(User loginUser) throws CannotOperateException {
+    	if (!writer.isSameUser(loginUser)) {
+			throw new CannotOperateException("다른 사용자가 쓴 글을 삭제할 수 없습니다.");
+		}
+    	
+		if( answers.stream().filter(a -> !a.isSameUser(loginUser)).count() > 0 ) {
+			throw new CannotOperateException("다른 사용자가 추가한 댓글이 존재해 삭제할 수 없습니다.");
+		}
+		
+		return true;
+	}
 
 	@Override
 	public String toString() {

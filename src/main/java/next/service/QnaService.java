@@ -1,14 +1,11 @@
 package next.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import next.CannotOperateException;
-import next.model.Answer;
 import next.model.Question;
 import next.model.User;
 import next.repository.QuestionRepository;
@@ -28,31 +25,10 @@ public class QnaService {
 		if (question == null) {
 			throw new EmptyResultDataAccessException("존재하지 않는 질문입니다.", 1);
 		}
-
-		if (!question.isSameUser(user)) {
-			throw new CannotOperateException("다른 사용자가 쓴 글을 삭제할 수 없습니다.");
+		
+		if (question.canDelete(user)) {
+			questionRepository.delete(question);
 		}
-
-		List<Answer> answers = question.getAnswers();
-		if (answers.isEmpty()) {
-		    questionRepository.delete(question);
-			return;
-		}
-
-		boolean canDelete = true;
-		for (Answer answer : answers) {
-			User writer = question.getWriter();
-			if (!writer.isSameUser(answer.getWriter())) {
-				canDelete = false;
-				break;
-			}
-		}
-
-		if (!canDelete) {
-			throw new CannotOperateException("다른 사용자가 추가한 댓글이 존재해 삭제할 수 없습니다.");
-		}
-
-		questionRepository.delete(question);
 	}
 
 	public void updateQuestion(long questionId, Question newQuestion, User user) throws CannotOperateException {
