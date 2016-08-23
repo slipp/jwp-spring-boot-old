@@ -1,6 +1,6 @@
 package next.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -13,6 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import com.google.common.collect.Lists;
 
@@ -31,8 +34,12 @@ public class Question {
 	private String title;
 
 	private String contents;
-
-	private Date createdDate;
+	
+	@CreatedDate
+	private LocalDateTime createdDate;
+	
+	@LastModifiedDate 
+	private LocalDateTime modifiedDate;
 
 	private int countOfComment;
 	
@@ -51,7 +58,7 @@ public class Question {
 		this.writer = writer;
 		this.title = title;
 		this.contents = contents;
-		this.createdDate = new Date();
+		this.createdDate = LocalDateTime.now();
 		this.answers = answers;
 	}
 
@@ -83,12 +90,8 @@ public class Question {
 		return writer;
 	}
 
-	public Date getCreatedDate() {
+	public LocalDateTime getCreatedDate() {
 		return createdDate;
-	}
-	
-	public long getTimeFromCreateDate() {
-		return this.createdDate.getTime();
 	}
 
 	public int getCountOfComment() {

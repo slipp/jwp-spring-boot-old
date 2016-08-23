@@ -1,6 +1,6 @@
 package next.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -9,6 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 public class Answer {
@@ -22,7 +25,11 @@ public class Answer {
 	
 	private String contents;
 	
-	private Date createdDate;
+	@CreatedDate
+	private LocalDateTime createdDate;
+	
+	@LastModifiedDate 
+	private LocalDateTime modifiedDate;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_question_id"))
@@ -32,14 +39,14 @@ public class Answer {
     }
 	
 	public Answer(User writer, String contents, Question question) {
-		this(0, writer, contents, new Date(), question);
+		this(0, writer, contents, LocalDateTime.now(), question);
 	}
 	
-	public Answer(long answerId, User writer, String contents, Date createdDate, Question question) {
+	public Answer(long answerId, User writer, String contents, LocalDateTime createdDate, Question question) {
 		this.answerId = answerId;
 		this.writer = writer;
 		this.contents = contents;
-		this.createdDate = createdDate;
+		this.createdDate = LocalDateTime.now();
 		this.question = question;
 	}
 	
@@ -55,12 +62,8 @@ public class Answer {
 		return contents;
 	}
 
-	public Date getCreatedDate() {
+	public LocalDateTime getCreatedDate() {
 		return createdDate;
-	}
-	
-	public long getTimeFromCreateDate() {
-		return this.createdDate.getTime();
 	}
 	
 	public Question getQuestion() {

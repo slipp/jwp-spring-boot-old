@@ -27,7 +27,7 @@
 						<div class="article-header-text">
 							<a href="/users/92/kimmunsu" class="article-author-name">${question.writer.userId}</a>
 							<a href="/questions/413" class="article-header-time" title="퍼머링크">
-								<fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${question.createdDate}" />
+								${f:formatDate(question.createdDate, 'yyyy-MM-dd HH:mm:ss')}
 								<i class="icon-link"></i>
 							</a>
 						</div>
@@ -65,7 +65,7 @@
 									</div>
 									<div class="article-header-text">
 										${each.writer.userId}
-										<div class="article-header-time"><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${each.createdDate}" /></div>
+										<div class="article-header-time">${f:formatDate(each.createdDate, 'yyyy-MM-dd HH:mm:ss')}</div>
 									</div>
 								</div>
 								<div class="article-doc comment-doc">

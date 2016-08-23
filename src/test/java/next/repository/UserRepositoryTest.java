@@ -19,5 +19,4 @@ public class UserRepositoryTest {
         User user = new User("userId", "password", "name", "javajigi@slipp.net");
         userRepository.save(user);
     }
-
 }
