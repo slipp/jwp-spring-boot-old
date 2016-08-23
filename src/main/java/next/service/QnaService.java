@@ -11,7 +11,6 @@ import next.CannotOperateException;
 import next.model.Answer;
 import next.model.Question;
 import next.model.User;
-import next.repository.AnswerRepository;
 import next.repository.QuestionRepository;
 
 @Service
@@ -19,15 +18,9 @@ import next.repository.QuestionRepository;
 public class QnaService {
     @Autowired
     private QuestionRepository questionRepository;
-    @Autowired
-    private AnswerRepository answerRepository;
 
 	public Question findById(long questionId) {
 		return questionRepository.findOne(questionId);
-	}
-
-	public List<Answer> findAllByQuestionId(long questionId) {
-		return answerRepository.findByQuestionId(questionId);
 	}
 
 	public void deleteQuestion(long questionId, User user) throws CannotOperateException {
@@ -40,7 +33,7 @@ public class QnaService {
 			throw new CannotOperateException("다른 사용자가 쓴 글을 삭제할 수 없습니다.");
 		}
 
-		List<Answer> answers = answerRepository.findByQuestionId(questionId);
+		List<Answer> answers = question.getAnswers();
 		if (answers.isEmpty()) {
 		    questionRepository.delete(question);
 			return;
@@ -48,8 +41,8 @@ public class QnaService {
 
 		boolean canDelete = true;
 		for (Answer answer : answers) {
-			String writer = question.getWriter();
-			if (!writer.equals(answer.getWriter())) {
+			User writer = question.getWriter();
+			if (!writer.isSameUser(answer.getWriter())) {
 				canDelete = false;
 				break;
 			}

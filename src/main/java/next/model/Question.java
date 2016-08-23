@@ -1,11 +1,18 @@
 package next.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 
 @Entity
 public class Question {
@@ -13,7 +20,9 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.AUTO)
 	private long questionId;
 
-	private String writer;
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_question_writer"))
+    private User writer;
 
 	private String title;
 
@@ -22,15 +31,19 @@ public class Question {
 	private Date createdDate;
 
 	private int countOfComment;
+	
+	@OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
+    @OrderBy("answerId ASC")
+    private List<Answer> answers;
 
 	public Question() {
 	}
 
-	public Question(String writer, String title, String contents) {
+	public Question(User writer, String title, String contents) {
 		this(0, writer, title, contents, new Date(), 0);
 	}
 
-	public Question(long questionId, String writer, String title, String contents, Date createdDate,
+	public Question(long questionId, User writer, String title, String contents, Date createdDate,
 			int countOfComment) {
 		this.questionId = questionId;
 		this.writer = writer;
@@ -64,7 +77,7 @@ public class Question {
 		this.contents = contents;
 	}
 
-	public String getWriter() {
+	public User getWriter() {
 		return writer;
 	}
 
@@ -81,11 +94,15 @@ public class Question {
 	}
 	
 	public Question newQuestion(User user) {
-		return new Question(user.getUserId(), title, contents);
+		return new Question(user, title, contents);
 	}
 	
 	public boolean isSameUser(User user) {
 		return user.isSameUser(this.writer);
+	}
+	
+	public List<Answer> getAnswers() {
+		return answers;
 	}
 
 	public void update(Question newQuestion) {

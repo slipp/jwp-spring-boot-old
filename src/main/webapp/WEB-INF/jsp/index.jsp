@@ -23,7 +23,7 @@
 							<div class="auth-info">
 								<i class="icon-add-comment"></i>
 								<span class="time"><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${each.createdDate}" /></span>
-								<a href="#" class="author">${each.writer}</a>
+								<a href="#" class="author">${each.writer.userId}</a>
 							</div>
 							<div class="reply" title="댓글">
 								<i class="icon-reply"></i>

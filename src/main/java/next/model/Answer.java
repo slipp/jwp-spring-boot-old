@@ -3,9 +3,12 @@ package next.model;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Answer {
@@ -13,34 +16,38 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.AUTO)
 	private long answerId;
 	
-	private String writer;
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_writer"))
+    private User writer;
 	
 	private String contents;
 	
 	private Date createdDate;
 
-	private long questionId;
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_question_id"))
+    private Question question;
 	
 	public Answer() {
     }
 	
-	public Answer(String writer, String contents, long questionId) {
-		this(0, writer, contents, new Date(), questionId);
+	public Answer(User writer, String contents, Question question) {
+		this(0, writer, contents, new Date(), question);
 	}
 	
-	public Answer(long answerId, String writer, String contents, Date createdDate, long questionId) {
+	public Answer(long answerId, User writer, String contents, Date createdDate, Question question) {
 		this.answerId = answerId;
 		this.writer = writer;
 		this.contents = contents;
 		this.createdDate = createdDate;
-		this.questionId = questionId;
+		this.question = question;
 	}
 	
 	public long getAnswerId() {
 		return answerId;
 	}
 	
-	public String getWriter() {
+	public User getWriter() {
 		return writer;
 	}
 
@@ -56,8 +63,8 @@ public class Answer {
 		return this.createdDate.getTime();
 	}
 	
-	public long getQuestionId() {
-		return questionId;
+	public Question getQuestion() {
+		return question;
 	}
 	
 	public boolean isSameUser(User user) {
@@ -93,6 +100,6 @@ public class Answer {
 	public String toString() {
 		return "Answer [answerId=" + answerId + ", writer=" + writer
 				+ ", contents=" + contents + ", createdDate=" + createdDate
-				+ ", questionId=" + questionId + "]";
+				+ ", questionId=" + question.getQuestionId() + "]";
 	}
 }

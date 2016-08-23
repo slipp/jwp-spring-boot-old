@@ -15,7 +15,7 @@ public class HomeController {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Model model) throws Exception {
-		model.addAttribute("question", questionRepository.findAll());
+		model.addAttribute("questions", questionRepository.findAll());
 		return "index";
 	}
 }

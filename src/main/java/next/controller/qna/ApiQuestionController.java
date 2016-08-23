@@ -55,13 +55,11 @@ public class ApiQuestionController {
     public Map<String, Object> addAnswer(@LoginUser User loginUser, @PathVariable long questionId, String contents)
             throws Exception {
         log.debug("questionId : {}, contents : {}", questionId, contents);
-        Map<String, Object> values = Maps.newHashMap();
-        Answer answer = new Answer(loginUser.getUserId(), contents, questionId);
-        Answer savedAnswer = answerRepository.save(answer);
         Question question = questionRepository.findOne(questionId);
+        Map<String, Object> values = Maps.newHashMap();
+        Answer answer = new Answer(loginUser, contents, question);
+        Answer savedAnswer = answerRepository.save(answer);
         question.updateCountOfAnswer();
-//        questionRepository.save(question);
-//        questionDao.updateCountOfAnswer(savedAnswer.getQuestionId());
 
         values.put("answer", savedAnswer);
         values.put("result", Result.ok());

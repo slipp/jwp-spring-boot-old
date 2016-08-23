@@ -25,7 +25,7 @@
 							<img src="https://graph.facebook.com/v2.3/100000059371774/picture" class="article-author-thumb" alt="">
 						</div>
 						<div class="article-header-text">
-							<a href="/users/92/kimmunsu" class="article-author-name">${question.writer}</a>
+							<a href="/users/92/kimmunsu" class="article-author-name">${question.writer.userId}</a>
 							<a href="/questions/413" class="article-header-time" title="퍼머링크">
 								<fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${question.createdDate}" />
 								<i class="icon-link"></i>
@@ -57,14 +57,14 @@
 					<div class="qna-comment-slipp">
 						<p class="qna-comment-count"><strong>${question.countOfComment}</strong>개의 의견</p>
 						<div class="qna-comment-slipp-articles">
-							<c:forEach items="${answers}" var="each">
+							<c:forEach items="${question.answers}" var="each">
 							<article class="article">
 								<div class="article-header">
 									<div class="article-header-thumb">
 										<img src="https://graph.facebook.com/v2.3/1324855987/picture" class="article-author-thumb" alt="">
 									</div>
 									<div class="article-header-text">
-										${each.writer}
+										${each.writer.userId}
 										<div class="article-header-time"><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${each.createdDate}" /></div>
 									</div>
 								</div>
