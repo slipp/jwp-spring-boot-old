@@ -33,6 +33,8 @@ public class Question extends AbstractEntity {
 	
 	private int countOfComment;
 	
+	private int showCount;
+	
 	@JsonIgnore
 	@OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
     @OrderBy("id ASC")
@@ -74,6 +76,10 @@ public class Question extends AbstractEntity {
 
 	public int getCountOfComment() {
 		return countOfComment;
+	}
+	
+	public int getShowCount() {
+		return showCount;
 	}
 	
 	public Question newQuestion(User user) {
