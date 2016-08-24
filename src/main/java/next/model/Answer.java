@@ -39,11 +39,10 @@ public class Answer {
     }
 	
 	public Answer(User writer, String contents, Question question) {
-		this(0, writer, contents, LocalDateTime.now(), question);
+		this(writer, contents, LocalDateTime.now(), question);
 	}
 	
-	public Answer(long answerId, User writer, String contents, LocalDateTime createdDate, Question question) {
-		this.answerId = answerId;
+	public Answer(User writer, String contents, LocalDateTime createdDate, Question question) {
 		this.writer = writer;
 		this.contents = contents;
 		this.createdDate = LocalDateTime.now();
@@ -57,11 +56,11 @@ public class Answer {
 	public User getWriter() {
 		return writer;
 	}
-
+	
 	public String getContents() {
 		return contents;
 	}
-
+	
 	public LocalDateTime getCreatedDate() {
 		return createdDate;
 	}
