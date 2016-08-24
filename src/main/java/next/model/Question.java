@@ -14,9 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 
 import next.CannotOperateException;
@@ -35,14 +33,13 @@ public class Question {
 
 	private String contents;
 	
-	@CreatedDate
 	private LocalDateTime createdDate;
 	
-	@LastModifiedDate 
 	private LocalDateTime modifiedDate;
 
 	private int countOfComment;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
     @OrderBy("answerId ASC")
     private List<Answer> answers;
@@ -93,6 +90,10 @@ public class Question {
 	public LocalDateTime getCreatedDate() {
 		return createdDate;
 	}
+	
+	public LocalDateTime getModifiedDate() {
+		return modifiedDate;
+	}
 
 	public int getCountOfComment() {
 		return countOfComment;
@@ -113,6 +114,7 @@ public class Question {
 	public void update(Question newQuestion) {
 		this.title = newQuestion.title;
 		this.contents = newQuestion.contents;
+		this.modifiedDate = LocalDateTime.now();
 	}
 	
     public void updateCountOfAnswer() {

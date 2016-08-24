@@ -21,8 +21,9 @@ function onSuccess(json, status){
   var result = json.result;
   if (result.status) {
 	  var answer = json.answer;
+	  console.log(answer);
 	  var answerTemplate = $("#answerTemplate").html();
-	  var template = answerTemplate.format(answer.writer, new Date(answer.createdDate), answer.contents, answer.questionId, answer.answerId);
+	  var template = answerTemplate.format(answer.writer.userId, answer.formattedCreatedDate, answer.contents, answer.questionId, answer.answerId);
 	  $(".qna-comment-slipp-articles").prepend(template);	  
   } else {
 	  alert(result.message);

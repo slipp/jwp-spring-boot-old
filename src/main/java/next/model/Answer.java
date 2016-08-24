@@ -10,8 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import core.web.taglibs.Functions;
 
 @Entity
 public class Answer {
@@ -25,12 +24,8 @@ public class Answer {
 	
 	private String contents;
 	
-	@CreatedDate
 	private LocalDateTime createdDate;
 	
-	@LastModifiedDate 
-	private LocalDateTime modifiedDate;
-
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_question_id"))
     private Question question;
@@ -63,6 +58,10 @@ public class Answer {
 	
 	public LocalDateTime getCreatedDate() {
 		return createdDate;
+	}
+	
+	public String getFormattedCreatedDate() {
+		return Functions.formatLocalDateTime(this.createdDate, "yyyy-MM-dd HH:mm:ss");
 	}
 	
 	public Question getQuestion() {
