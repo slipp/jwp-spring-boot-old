@@ -38,10 +38,10 @@
 					<div class="article-util">
 						<ul class="article-util-list">
 							<li>
-								<a class="link-modify-article" href="/questions/${question.questionId}/edit">수정</a>
+								<a class="link-modify-article" href="/questions/${question.id}/edit">수정</a>
 							</li>
 							<li>
-								<form class="form-delete" action="/questions/${question.questionId}" method="post">
+								<form class="form-delete" action="/questions/${question.id}" method="post">
 									<input type="hidden" name="_method" value="delete" />
 									<button class="link-delete-article" type="submit">삭제</button>
 								</form>
@@ -74,10 +74,10 @@
 								<div class="article-util">
 									<ul class="article-util-list">
 										<li>
-											<a class="link-modify-article" href="/api/questions/${question.questionId}/answers/${each.answerId}/edit">수정</a>
+											<a class="link-modify-article" href="/api/questions/${question.id}/answers/${each.id}/edit">수정</a>
 										</li>
 										<li>
-											<form class="form-delete" action="/api/questions/${question.questionId}/answers/${each.answerId}">
+											<form class="form-delete" action="/api/questions/${question.id}/answers/${each.id}">
 												<button type="submit" class="link-delete-article">삭제</button>
 											</form>
 										</li>
@@ -86,7 +86,7 @@
 							</article>
                             </c:forEach>
 							<div class="answerWrite">
-                            <form name="answer" action="/api/questions/${question.questionId}/answers" method="post">
+                            <form name="answer" action="/api/questions/${question.id}/answers" method="post">
 								<div class="form-group col-lg-12">
 									<textarea name="contents" id="contents" class="form-control" placeholder=""></textarea>
 								</div>

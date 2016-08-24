@@ -1,30 +1,28 @@
 package next.model;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 
+import core.web.taglibs.Functions;
+import next.AbstractEntity;
 import next.CannotOperateException;
 
 @Entity
-public class Question {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-	private long questionId;
-
+@EntityListeners(AuditingEntityListener.class)
+public class Question extends AbstractEntity {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_question_writer"))
     private User writer;
@@ -33,15 +31,11 @@ public class Question {
 
 	private String contents;
 	
-	private LocalDateTime createdDate;
-	
-	private LocalDateTime modifiedDate;
-
 	private int countOfComment;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
-    @OrderBy("answerId ASC")
+    @OrderBy("id ASC")
     private List<Answer> answers;
 
 	public Question() {
@@ -55,16 +49,7 @@ public class Question {
 		this.writer = writer;
 		this.title = title;
 		this.contents = contents;
-		this.createdDate = LocalDateTime.now();
 		this.answers = answers;
-	}
-
-	public long getQuestionId() {
-		return questionId;
-	}
-
-	public void setQuestionId(long questionId) {
-		this.questionId = questionId;
 	}
 
 	public String getTitle() {
@@ -87,14 +72,6 @@ public class Question {
 		return writer;
 	}
 
-	public LocalDateTime getCreatedDate() {
-		return createdDate;
-	}
-	
-	public LocalDateTime getModifiedDate() {
-		return modifiedDate;
-	}
-
 	public int getCountOfComment() {
 		return countOfComment;
 	}
@@ -110,11 +87,14 @@ public class Question {
 	public List<Answer> getAnswers() {
 		return answers;
 	}
+	
+	public String getFormattedCreatedDate() {
+		return Functions.formatLocalDateTime(getCreatedDate(), "yyyy-MM-dd HH:mm:ss");
+	}
 
 	public void update(Question newQuestion) {
 		this.title = newQuestion.title;
 		this.contents = newQuestion.contents;
-		this.modifiedDate = LocalDateTime.now();
 	}
 	
     public void updateCountOfAnswer() {
@@ -134,30 +114,18 @@ public class Question {
 	}
 
 	@Override
-	public String toString() {
-		return "Question [questionId=" + questionId + ", writer=" + writer + ", title=" + title + ", contents="
-				+ contents + ", createdDate=" + createdDate + ", countOfComment=" + countOfComment + "]";
-	}
-
-	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (questionId ^ (questionId >>> 32));
-		return result;
+		return super.hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Question other = (Question) obj;
-		if (questionId != other.questionId)
-			return false;
-		return true;
+		return super.equals(obj);
+	}
+	
+	@Override
+	public String toString() {
+		return "Question [questionId=" + getId() + ", writer=" + writer + ", title=" + title + ", contents="
+				+ contents + ", createdDate=" + getFormattedCreatedDate() + ", countOfComment=" + countOfComment + "]";
 	}
 }

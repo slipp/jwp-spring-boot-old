@@ -7,6 +7,9 @@ public final class Functions {
     private Functions() {}
 
     public static String formatLocalDateTime(LocalDateTime localDateTime, String pattern) {
+    	if (localDateTime == null) {
+    		return "";
+    	}
         return localDateTime.format(DateTimeFormatter.ofPattern(pattern));
     }
 }

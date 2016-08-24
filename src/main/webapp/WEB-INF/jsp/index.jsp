@@ -18,7 +18,7 @@
 					<div class="wrap">
 						<div class="main">
 							<strong class="subject">
-								<a href="/questions/${each.questionId}">${each.title}</a>
+								<a href="/questions/${each.id}">${each.title}</a>
 							</strong>
 							<div class="auth-info">
 								<i class="icon-add-comment"></i>

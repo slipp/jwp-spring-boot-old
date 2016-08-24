@@ -2,20 +2,18 @@ package next.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.EntityListeners;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import next.AbstractEntity;
 
 @Entity
-public class User {
+@EntityListeners(AuditingEntityListener.class)
+public class User extends AbstractEntity {
     public static final GuestUser GUEST_USER = new GuestUser();
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
 
     @Size(min = 3, max = 12)
     @Column(nullable = false, unique = true, length = 20)
@@ -112,24 +110,12 @@ public class User {
 
     @Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (id ^ (id >>> 32));
-		return result;
+		return super.hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		User other = (User) obj;
-		if (id != other.id)
-			return false;
-		return true;
+		return super.equals(obj);
 	}
 
 	@Override

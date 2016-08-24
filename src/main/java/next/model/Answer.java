@@ -1,30 +1,24 @@
 package next.model;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import core.web.taglibs.Functions;
+import next.AbstractEntity;
 
 @Entity
-public class Answer {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-	private long answerId;
-	
+@EntityListeners(AuditingEntityListener.class)
+public class Answer extends AbstractEntity {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_writer"))
     private User writer;
 	
 	private String contents;
-	
-	private LocalDateTime createdDate;
 	
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_question_id"))
@@ -34,18 +28,9 @@ public class Answer {
     }
 	
 	public Answer(User writer, String contents, Question question) {
-		this(writer, contents, LocalDateTime.now(), question);
-	}
-	
-	public Answer(User writer, String contents, LocalDateTime createdDate, Question question) {
 		this.writer = writer;
 		this.contents = contents;
-		this.createdDate = LocalDateTime.now();
 		this.question = question;
-	}
-	
-	public long getAnswerId() {
-		return answerId;
 	}
 	
 	public User getWriter() {
@@ -56,12 +41,8 @@ public class Answer {
 		return contents;
 	}
 	
-	public LocalDateTime getCreatedDate() {
-		return createdDate;
-	}
-	
 	public String getFormattedCreatedDate() {
-		return Functions.formatLocalDateTime(this.createdDate, "yyyy-MM-dd HH:mm:ss");
+		return Functions.formatLocalDateTime(getCreatedDate(), "yyyy-MM-dd HH:mm:ss");
 	}
 	
 	public Question getQuestion() {
@@ -77,30 +58,18 @@ public class Answer {
 	
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (answerId ^ (answerId >>> 32));
-		return result;
+		return super.hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Answer other = (Answer) obj;
-		if (answerId != other.answerId)
-			return false;
-		return true;
+		return super.equals(obj);
 	}
 
 	@Override
 	public String toString() {
-		return "Answer [answerId=" + answerId + ", writer=" + writer
-				+ ", contents=" + contents + ", createdDate=" + createdDate
-				+ ", questionId=" + question.getQuestionId() + "]";
+		return "Answer [answerId=" + getId() + ", writer=" + writer
+				+ ", contents=" + contents + ", createdDate=" + getFormattedCreatedDate()
+				+ ", questionId=" + question.getId() + "]";
 	}
 }
