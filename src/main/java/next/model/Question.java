@@ -16,9 +16,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 
+import core.fp.Result;
 import core.web.taglibs.Functions;
 import next.AbstractEntity;
-import next.CannotOperateException;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -107,16 +107,16 @@ public class Question extends AbstractEntity {
         this.countOfComment += 1;
     }
     
-    public boolean canDelete(User loginUser) throws CannotOperateException {
+    public Result<Question, String> delete(User loginUser) {
     	if (!writer.isSameUser(loginUser)) {
-			throw new CannotOperateException("다른 사용자가 쓴 글을 삭제할 수 없습니다.");
+    		return Result.error("다른 사용자가 쓴 글을 삭제할 수 없습니다.");
 		}
     	
 		if( answers.stream().filter(a -> !a.isSameUser(loginUser)).count() > 0 ) {
-			throw new CannotOperateException("다른 사용자가 추가한 댓글이 존재해 삭제할 수 없습니다.");
+			return Result.error("다른 사용자가 추가한 댓글이 존재해 삭제할 수 없습니다.");
 		}
 		
-		return true;
+		return Result.ok(this);
 	}
 
 	@Override

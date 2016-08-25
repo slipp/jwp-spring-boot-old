@@ -1,24 +1,24 @@
 package next.model;
 
-public class Result {
+public class JsonResult {
 	private boolean status;
 	private String message;
 
-	private Result(boolean status) {
+	private JsonResult(boolean status) {
 		this(status, "");
 	}
 	
-	private Result(boolean status, String message) {
+	private JsonResult(boolean status, String message) {
 		this.status = status;
 		this.message = message;
 	}
 
-	public static Result ok() {
-		return new Result(true);
+	public static JsonResult ok() {
+		return new JsonResult(true);
 	}
 
-	public static Result fail(String message) {
-		return new Result(false, message);
+	public static JsonResult fail(String message) {
+		return new JsonResult(false, message);
 	}
 
 	public boolean isStatus() {

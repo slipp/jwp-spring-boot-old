@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import core.fp.Result;
 import core.web.argumentresolver.LoginUser;
-import next.CannotOperateException;
 import next.model.Question;
 import next.model.User;
 import next.repository.QuestionRepository;
@@ -64,13 +64,11 @@ public class QuestionController {
 
 	@RequestMapping(value = "/{questionId}", method = RequestMethod.DELETE)
 	public String delete(@LoginUser User loginUser, @PathVariable long questionId, Model model) throws Exception {
-		try {
-			qnaService.deleteQuestion(questionId, loginUser);
-			return "redirect:/";
-		} catch (CannotOperateException e) {
+		Result<Question, String> result = qnaService.deleteQuestion(questionId, loginUser);
+		return result.either(q -> "redirect:/", e -> {
 			model.addAttribute("question", qnaService.findById(questionId));
-			model.addAttribute("errorMessage", e.getMessage());
+			model.addAttribute("errorMessage", e);
 			return "show";
-		}
+		});
 	}
 }
